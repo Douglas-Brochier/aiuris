@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIuris - Dashboard Jurídico</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .sidebar {
+            transition: all 0.3s ease;
+        }
+        .progress-bar {
+            height: 8px;
+            border-radius: 4px;
+            background-color: #e5e7eb;
+        }
+        .progress-fill {
+            height: 100%;
+            border-radius: 4px;
+            background-color: #4f46e5;
+            transition: width 0.5s ease;
+        }
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        .risk-high {
+            border-left: 4px solid #ef4444;
+        }
+        .risk-medium {
+            border-left: 4px solid #f59e0b;
+        }
+        .risk-low {
+            border-left: 4px solid #10b981;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar -->
+        <div class="sidebar bg-indigo-900 text-white w-64 flex-shrink-0 flex flex-col">
+            <div class="p-4 flex items-center space-x-2 border-b border-indigo-800">
+                <i class="fas fa-balance-scale text-2xl text-indigo-300"></i>
+                <h1 class="text-xl font-bold">AIuris</h1>
+            </div>
+            <div class="p-4 space-y-1">
+                <button id="dashboard-btn" class="w-full flex items-center space-x-2 p-2 rounded bg-indigo-800">
+                    <i class="fas fa-home"></i>
+                    <span>Dashboard</span>
+                </button>
+                <button id="processes-btn" class="w-full flex items-center space-x-2 p-2 rounded hover:bg-indigo-800">
+                    <i class="fas fa-folder-open"></i>
+                    <span>Processos</span>
+                </button>
+                <button id="documents-btn" class="w-full flex items-center space-x-2 p-2 rounded hover:bg-indigo-800">
+                    <i class="fas fa-file-contract"></i>
+                    <span>Documentos</span>
+                </button>
+                <button id="ai-btn" class="w-full flex items-center space-x-2 p-2 rounded hover:bg-indigo-800">
+                    <i class="fas fa-robot"></i>
+                    <span>Assistente IA</span>
+                </button>
+                <button id="settings-btn" class="w-full flex items-center space-x-2 p-2 rounded hover:bg-indigo-800">
+                    <i class="fas fa-cog"></i>
+                    <span>Configurações</span>
+                </button>
+            </div>
+            <div class="mt-auto p-4 border-t border-indigo-800">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-full bg-indigo-700 flex items-center justify-center">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div>
+                        <div class="font-medium">Dr. Advogado</div>
+                        <div class="text-xs text-indigo-300">OAB/SP 123.456</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <!-- Top Navigation -->
+            <header class="bg-white border-b border-gray-200 p-4 flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <h2 class="text-xl font-semibold text-gray-800">Dashboard</h2>
+                    <div class="relative">
+                        <input type="text" placeholder="Buscar processo..." class="pl-10 pr-4 py-2 border rounded-lg w-64 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button class="p-2 rounded-full hover:bg-gray-100">
+                        <i class="fas fa-bell text-gray-600"></i>
+                        <span class="absolute top-0 right-0 h-2 w-2 rounded-full bg-red-500"></span>
+                    </button>
+                    <button class="p-2 rounded-full hover:bg-gray-100">
+                        <i class="fas fa-question-circle text-gray-600"></i>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Content Area -->
+            <main class="flex-1 overflow-y-auto p-6">
+                <!-- Welcome Message -->
+                <div class="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-xl shadow-sm p-6 text-white mb-6">
+                    <h1 class="text-2xl font-bold mb-2">Bem-vindo, Dr. Advogado!</h1>
+                    <p class="opacity-90">Hoje é <span id="current-date" class="font-medium"></span>. Você tem <span class="font-bold">3 prazos</span> para cumprir hoje e <span class="font-bold">7 processos</span> ativos.</p>
+                </div>
+
+                <!-- Stats Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+                    <div class="bg-white rounded-xl shadow-sm p-6">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-sm text-gray-500">Processos Ativos</p>
+                                <h3 class="text-2xl font-bold mt-1">24</h3>
+                            </div>
+                            <div class="p-3 rounded-lg bg-indigo-100 text-indigo-600">
+                                <i class="fas fa-folder-open"></i>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <div class="flex justify-between text-sm text-gray-500">
+                                <span>Este mês</span>
+                                <span>+12%</span>
+                            </div>
+                            <div class="progress-bar mt-1">
+                                <div class="progress-fill" style="width: 65%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl shadow-sm p-6">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-sm text-gray-500">Prazos Hoje</p>
+                                <h3 class="text-2xl font-bold mt-1">3</h3>
+                            </div>
+                            <div class="p-3 rounded-lg bg-red-100 text-red-600">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <div class="flex justify-between text-sm text-gray-500">
+                                <span>Urgentes</span>
+                                <span>1</span>
+                            </div>
+                            <div class="progress-bar mt-1">
+                                <div class="progress-fill bg-red-500" style="width: 33%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl shadow-sm p-6">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-sm text-gray-500">Faturamento</p>
+                                <h3 class="text-2xl font-bold mt-1">R$ 42,8k</h3>
+                            </div>
+                            <div class="p-3 rounded-lg bg-green-100 text-green-600">
+                                <i class="fas fa-dollar-sign"></i>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <div class="flex justify-between text-sm text-gray-500">
+                                <span>Este mês</span>
+                                <span>+8%</span>
+                            </div>
+                            <div class="progress-bar mt-1">
+                                <div class="progress-fill bg-green-500" style="width: 45%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl shadow-sm p-6">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-sm text-gray-500">Eficiência</p>
+                                <h3 class="text-2xl font-bold mt-1">87%</h3>
+                            </div>
+                            <div class="p-3 rounded-lg bg-yellow-100 text-yellow-600">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <div class="flex justify-between text-sm text-gray-500">
+                                <span>Meta</span>
+                                <span>90%</span>
+                            </div>
+                            <div class="progress-bar mt-1">
+                                <div class="progress-fill bg-yellow-500" style="width: 87%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Main Content Grid -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Left Column -->
+                    <div class="lg:col-span-2 space-y-6">
+                        <!-- Processes Chart -->
+                        <div class="bg-white rounded-xl shadow-sm p-6">
+                            <div class="flex justify-between items-center mb-4">
+                                <h3 class="font-semibold text-lg">Andamento dos Processos</h3>
+                                <select class="border rounded-lg px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                    <option>Últimos 30 dias</option>
+                                    <option>Últimos 90 dias</option>
+                                    <option>Este ano</option>
+                                </select>
+                            </div>
+                            <div class="h-64">
+                                <canvas id="processesChart"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Team Performance -->
+                        <div class="bg-white rounded-xl shadow-sm p-6">
+                            <div class="flex justify-between items-center mb-4">
+                                <h3 class="font-semibold text-lg">Desempenho da Equipe</h3>
+                                <button class="text-indigo-600 text-sm font-medium">Ver todos</button>
+                            </div>
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full divide-y divide-gray-200">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Colaborador</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tarefas</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Prazos</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Eficiência</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="bg-white divide-y divide-gray-200">
+                                        <tr>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="flex items-center">
+                                                    <div class="flex-shrink-0 h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600">
+                                                        <i class="fas fa-user"></i>
+                                                    </div>
+                                                    <div class="ml-4">
+                                                        <div class="text-sm font-medium text-gray-900">Ana Silva</div>
+                                                        <div class="text-sm text-gray-500">Advogada Sênior</div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="text-sm text-gray-900">18/20</div>
+                                                <div class="text-sm text-gray-500">este mês</div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">100%</span>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="progress-bar w-24">
+                                                    <div class="progress-fill" style="width: 92%"></div>
+                                                </div>
+                                                <div class="text-sm text-gray-500 mt-1">92%</div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="flex items-center">
+                                                    <div class="flex-shrink-0 h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
+                                                        <i class="fas fa-user"></i>
+                                                    </div>
+                                                    <div class="ml-4">
+                                                        <div class="text-sm font-medium text-gray-900">Carlos Mendes</div>
+                                                        <div class="text-sm text-gray-500">Advogado Pleno</div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="text-sm text-gray-900">15/18</div>
+                                                <div class="text-sm text-gray-500">este mês</div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">94%</span>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="progress-bar w-24">
+                                                    <div class="progress-fill" style="width: 85%"></div>
+                                                </div>
+                                                <div class="text-sm text-gray-500 mt-1">85%</div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="flex items-center">
+                                                    <div class="flex-shrink-0 h-10 w-10 rounded-full bg-purple-100 flex items-center justify-center text-purple-600">
+                                                        <i class="fas fa-user"></i>
+                                                    </div>
+                                                    <div class="ml-4">
+                                                        <div class="text-sm font-medium text-gray-900">Mariana Costa</div>
+                                                        <div class="text-sm text-gray-500">Estagiária</div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="text-sm text-gray-900">12/15</div>
+                                                <div class="text-sm text-gray-500">este mês</div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <span class="px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-800">80%</span>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="progress-bar w-24">
+                                                    <div class="progress-fill" style="width: 78%"></div>
+                                                </div>
+                                                <div class="text-sm text-gray-500 mt-1">78%</div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column -->
+                    <div class="space-y-6">
+                        <!-- Upcoming Payments -->
+                        <div class="bg-white rounded-xl shadow-sm p-6">
+                            <div class="flex justify-between items-center mb-4">
+                                <h3 class="font-semibold text-lg">Próximos Pagamentos</h3>
+                                <button class="text-indigo-600 text-sm font-medium">Ver todos</button>
+                            </div>
+                            <div class="space-y-4">
+                                <div class="flex items-start p-3 rounded-lg border border-gray-200 hover:bg-gray-50">
+                                    <div class="p-2 rounded-lg bg-green-100 text-green-600 mr-3">
+                                        <i class="fas fa-money-bill-wave"></i>
+                                    </div>
+                                    <div class="flex-1">
+                                        <h4 class="font-medium">Honorários - Processo 12345</h4>
+                                        <p class="text-sm text-gray-600">Cliente: João Silva</p>
+                                        <div class="flex justify-between items-center mt-2">
+                                            <span class="text-sm font-medium text-green-600">R$ 5.200,00</span>
+                                            <span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">15/08/2023</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flex items-start p-3 rounded-lg border border-gray-200 hover:bg-gray-50">
+                                    <div class="p-2 rounded-lg bg-blue-100 text-blue-600 mr-3">
+                                        <i class="fas fa-hand-holding-usd"></i>
+                                    </div>
+                                    <div class="flex-1">
+                                        <h4 class="font-medium">Parcela 2/3 - Processo 67890</h4>
+                                        <p class="text-sm text-gray-600">Cliente: Empresa XYZ</p>
+                                        <div class="flex justify-between items-center mt-2">
+                                            <span class="text-sm font-medium text-blue-600">R$ 3.750,00</span>
+                                            <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">22/08/2023</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flex items-start p-3 rounded-lg border border-gray-200 hover:bg-gray-50">
+                                    <div class="p-2 rounded-lg bg-purple-100 text-purple-600 mr-3">
+                                        <i class="fas fa-coins"></i>
+                                    </div>
+                                    <div class="flex-1">
+                                        <h4 class="font-medium">Sucesso - Processo 54321</h4>
+                                        <p class="text-sm text-gray-600">Cliente: Maria Oliveira</p>
+                                        <div class="flex justify-between items-center mt-2">
+                                            <span class="text-sm font-medium text-purple-600">R$ 8.000,00</span>
+                                            <span class="text-xs bg-purple-100 text-purple-800 px-2 py-1 rounded-full">05/09/2023</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Urgent Deadlines -->
+                        <div class="bg-white rounded-xl shadow-sm p-6">
+                            <div class="flex justify-between items-center mb-4">
+                                <h3 class="font-semibold text-lg">Prazos Urgentes</h3>
+                                <button class="text-indigo-600 text-sm font-medium">Ver todos</button>
+                            </div>
+                            <div class="space-y-3">
+                                <div class="p-3 rounded-lg bg-red-50 border-l-4 border-red-500">
+                                    <div class="flex justify-between items-start">
+                                        <div>
+                                            <h4 class="font-medium">Recurso Especial</h4>
+                                            <p class="text-sm text-gray-600">Processo 98765 - Cliente ABC</p>
+                                        </div>
+                                        <span class="text-xs bg-red-100 text-red-800 px-2 py-1 rounded-full">Hoje</span>
+                                    </div>
+                                    <div class="mt-2 flex items-center text-sm text-gray-500">
+                                        <i class="fas fa-clock mr-1"></i>
+                                        <span>Vence às 18:00</span>
+                                    </div>
+                                </div>
+                                <div class="p-3 rounded-lg bg-orange-50 border-l-4 border-orange-500">
+                                    <div class="flex justify-between items-start">
+                                        <div>
+                                            <h4 class="font-medium">Contestação</h4>
+                                            <p class="text-sm text-gray-600">Processo 12345 - Cliente XYZ</p>
+                                        </div>
+                                        <span class="text-xs bg-orange-100 text-orange-800 px-2 py-1 rounded-full">Amanhã</span>
+                                    </div>
+                                    <div class="mt-2 flex items-center text-sm text-gray-500">
+                                        <i class="fas fa-clock mr-1"></i>
+                                        <span>Vence às 23:59</span>
+                                    </div>
+                                </div>
+                                <div class="p-3 rounded-lg bg-yellow-50 border-l-4 border-yellow-500">
+                                    <div class="flex justify-between items-start">
+                                        <div>
+                                            <h4 class="font-medium">Petição Inicial</h4>
+                                            <p class="text-sm text-gray-600">Processo 54321 - Cliente DEF</p>
+                                        </div>
+                                        <span class="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full">2 dias</span>
+                                    </div>
+                                    <div class="mt-2 flex items-center text-sm text-gray-500">
+                                        <i class="fas fa-clock mr-1"></i>
+                                        <span>Prazo final: 18/08</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Recent Activity -->
+                        <div class="bg-white rounded-xl shadow-sm p-6">
+                            <h3 class="font-semibold text-lg mb-4">Atividade Recente</h3>
+                            <div class="space-y-4">
+                                <div class="flex items-start">
+                                    <div class="flex-shrink-0 mt-1">
+                                        <div class="h-8 w-8 rounded-full bg-green-100 flex items-center justify-center text-green-600">
+                                            <i class="fas fa-check"></i>
+                                        </div>
+                                    </div>
+                                    <div class="ml-3">
+                                        <p class="text-sm font-medium text-gray-900">Petição inicial protocolada</p>
+                                        <p class="text-sm text-gray-500">Processo 12345 por Ana Silva <span class="text-gray-400">• 2h atrás</span></p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start">
+                                    <div class="flex-shrink-0 mt-1">
+                                        <div class="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
+                                            <i class="fas fa-file-alt"></i>
+                                        </div>
+                                    </div>
+                                    <div class="ml-3">
+                                        <p class="text-sm font-medium text-gray-900">Documento gerado</p>
+                                        <p class="text-sm text-gray-500">Contestação para Processo 67890 <span class="text-gray-400">• Hoje 09:30</span></p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start">
+                                    <div class="flex-shrink-0 mt-1">
+                                        <div class="h-8 w-8 rounded-full bg-purple-100 flex items-center justify-center text-purple-600">
+                                            <i class="fas fa-bell"></i>
+                                        </div>
+                                    </div>
+                                    <div class="ml-3">
+                                        <p class="text-sm font-medium text-gray-900">Lembrete criado</p>
+                                        <p class="text-sm text-gray-500">Recurso para Processo 98765 <span class="text-gray-400">• Ontem 18:45</span></p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start">
+                                    <div class="flex-shrink-0 mt-1">
+                                        <div class="h-8 w-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600">
+                                            <i class="fas fa-user-plus"></i>
+                                        </div>
+                                    </div>
+                                    <div class="ml-3">
+                                        <p class="text-sm font-medium text-gray-900">Novo cliente cadastrado</p>
+                                        <p class="text-sm text-gray-500">Empresa ABC Ltda. <span class="text-gray-400">• Ontem 16:20</span></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set current date
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('current-date').textContent = new Date().toLocaleDateString('pt-BR', options);
+
+            document.getElementById('processes-btn').addEventListener('click', function () {
+                window.location.href = 'processos.html';
+            });    
+            
+            // Processes Chart
+            const ctx = document.getElementById('processesChart').getContext('2d');
+            const processesChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul'],
+                    datasets: [
+                        {
+                            label: 'Novos Processos',
+                            data: [12, 19, 15, 20, 18, 16, 22],
+                            backgroundColor: '#4f46e5',
+                            borderRadius: 4
+                        },
+                        {
+                            label: 'Processos Concluídos',
+                            data: [8, 12, 10, 14, 12, 10, 15],
+                            backgroundColor: '#10b981',
+                            borderRadius: 4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                drawBorder: false
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                boxWidth: 12,
+                                padding: 20
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Navigation buttons functionality
+            document.getElementById('dashboard-btn').addEventListener('click', function() {
+                this.classList.add('bg-indigo-800');
+                document.getElementById('processes-btn').classList.remove('bg-indigo-800');
+                document.getElementById('documents-btn').classList.remove('bg-indigo-800');
+                document.getElementById('ai-btn').classList.remove('bg-indigo-800');
+                document.getElementById('settings-btn').classList.remove('bg-indigo-800');
+                document.querySelector('header h2').textContent = 'Dashboard';
+            });
+
+            document.getElementById('processes-btn').addEventListener('click', function() {
+                this.classList.add('bg-indigo-800');
+                document.getElementById('dashboard-btn').classList.remove('bg-indigo-800');
+                document.getElementById('documents-btn').classList.remove('bg-indigo-800');
+                document.getElementById('ai-btn').classList.remove('bg-indigo-800');
+                document.getElementById('settings-btn').classList.remove('bg-indigo-800');
+                document.querySelector('header h2').textContent = 'Processos';
+            });
+
+            document.getElementById('documents-btn').addEventListener('click', function() {
+                this.classList.add('bg-indigo-800');
+                document.getElementById('dashboard-btn').classList.remove('bg-indigo-800');
+                document.getElementById('processes-btn').classList.remove('bg-indigo-800');
+                document.getElementById('ai-btn').classList.remove('bg-indigo-800');
+                document.getElementById('settings-btn').classList.remove('bg-indigo-800');
+                document.querySelector('header h2').textContent = 'Documentos';
+            });
+
+            document.getElementById('ai-btn').addEventListener('click', function() {
+                this.classList.add('bg-indigo-800');
+                document.getElementById('dashboard-btn').classList.remove('bg-indigo-800');
+                document.getElementById('processes-btn').classList.remove('bg-indigo-800');
+                document.getElementById('documents-btn').classList.remove('bg-indigo-800');
+                document.getElementById('settings-btn').classList.remove('bg-indigo-800');
+                document.querySelector('header h2').textContent = 'Assistente IA';
+            });
+
+            document.getElementById('settings-btn').addEventListener('click', function() {
+                this.classList.add('bg-indigo-800');
+                document.getElementById('dashboard-btn').classList.remove('bg-indigo-800');
+                document.getElementById('processes-btn').classList.remove('bg-indigo-800');
+                document.getElementById('documents-btn').classList.remove('bg-indigo-800');
+                document.getElementById('ai-btn').classList.remove('bg-indigo-800');
+                document.querySelector('header h2').textContent = 'Configurações';
+            });
+        });
+    </script>
+</body>
+</html>
