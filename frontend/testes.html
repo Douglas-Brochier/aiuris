@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Testes - SaaS Jurídico MVP</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="mb-4">Testes do Sistema SaaS Jurídico</h1>
+        
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5>Status da API</h5>
+            </div>
+            <div class="card-body">
+                <p>Status atual: <span id="api-status">Verificando...</span></p>
+            </div>
+        </div>
+        
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5>Teste de Autenticação</h5>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label for="test-email" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="test-email" value="admin@example.com">
+                </div>
+                <div class="mb-3">
+                    <label for="test-password" class="form-label">Senha</label>
+                    <input type="password" class="form-control" id="test-password" value="admin123">
+                </div>
+                <button id="test-auth" class="btn btn-primary">Testar Autenticação</button>
+                <div class="mt-3">
+                    <p>Resultado: <span id="auth-result">Não testado</span></p>
+                    <div class="mt-2">
+                        <label>Token JWT:</label>
+                        <textarea id="token-display" class="form-control" rows="3" readonly></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5>Teste CRUD Clientes</h5>
+                    </div>
+                    <div class="card-body">
+                        <button id="test-clientes" class="btn btn-primary">Testar Clientes</button>
+                        <div class="mt-3">
+                            <p>Resultado: <span id="clientes-result">Não testado</span></p>
+                            <p>Quantidade: <span id="clientes-count">0</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5>Teste CRUD Processos</h5>
+                    </div>
+                    <div class="card-body">
+                        <button id="test-processos" class="btn btn-primary">Testar Processos</button>
+                        <div class="mt-3">
+                            <p>Resultado: <span id="processos-result">Não testado</span></p>
+                            <p>Quantidade: <span id="processos-count">0</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5>Teste CRUD Licitações</h5>
+                    </div>
+                    <div class="card-body">
+                        <button id="test-licitacoes" class="btn btn-primary">Testar Licitações</button>
+                        <div class="mt-3">
+                            <p>Resultado: <span id="licitacoes-result">Não testado</span></p>
+                            <p>Quantidade: <span id="licitacoes-count">0</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5>Teste de Responsividade</h5>
+            </div>
+            <div class="card-body">
+                <p>Redimensione a janela do navegador para testar a responsividade:</p>
+                <div class="row">
+                    <div class="col-sm-6 col-md-4 col-lg-3 mb-3">
+                        <div class="p-3 bg-light border">Extra pequeno</div>
+                    </div>
+                    <div class="col-sm-6 col-md-4 col-lg-3 mb-3">
+                        <div class="p-3 bg-light border">Pequeno</div>
+                    </div>
+                    <div class="col-sm-6 col-md-4 col-lg-3 mb-3">
+                        <div class="p-3 bg-light border">Médio</div>
+                    </div>
+                    <div class="col-sm-6 col-md-4 col-lg-3 mb-3">
+                        <div class="p-3 bg-light border">Grande</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="d-flex justify-content-between mb-5">
+            <a href="login.html" class="btn btn-secondary">Voltar para Login</a>
+            <a href="dashboard.html" class="btn btn-primary">Ir para Dashboard</a>
+        </div>
+    </div>
+
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Custom JS -->
+    <script src="js/testes.js"></script>
+</body>
+</html>

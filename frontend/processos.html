@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Processos - SaaS Jurídico MVP</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 col-lg-2 d-md-block sidebar collapse">
+                <div class="position-sticky pt-3">
+                    <div class="text-center mb-4">
+                        <h4 class="text-white">SaaS Jurídico</h4>
+                    </div>
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" href="dashboard.html">
+                                <i class="fas fa-tachometer-alt"></i> Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="clientes.html">
+                                <i class="fas fa-users"></i> Clientes
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="processos.html">
+                                <i class="fas fa-gavel"></i> Processos
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="licitacoes.html">
+                                <i class="fas fa-file-contract"></i> Licitações
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="agenda.html">
+                                <i class="fas fa-calendar-alt"></i> Agenda
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="tarefas.html">
+                                <i class="fas fa-tasks"></i> Tarefas
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="documentos.html">
+                                <i class="fas fa-file-alt"></i> Documentos
+                            </a>
+                        </li>
+                        <li class="nav-item mt-5">
+                            <a class="nav-link" href="#" id="logout-link">
+                                <i class="fas fa-sign-out-alt"></i> Sair
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2">Processos</h1>
+                    <div class="btn-toolbar mb-2 mb-md-0">
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#novoProcessoModal">
+                            <i class="fas fa-plus"></i> Novo Processo
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Filtros -->
+                <div class="row mb-4">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <form id="filtro-processos-form" class="row g-3">
+                                    <div class="col-md-3">
+                                        <label for="filtro-numero" class="form-label">Número do Processo</label>
+                                        <input type="text" class="form-control" id="filtro-numero">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="filtro-cliente" class="form-label">Cliente</label>
+                                        <select class="form-select" id="filtro-cliente">
+                                            <option value="">Todos</option>
+                                            <!-- Opções serão carregadas via JavaScript -->
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="filtro-status" class="form-label">Status</label>
+                                        <select class="form-select" id="filtro-status">
+                                            <option value="">Todos</option>
+                                            <option value="ativo">Ativo</option>
+                                            <option value="arquivado">Arquivado</option>
+                                            <option value="suspenso">Suspenso</option>
+                                            <option value="finalizado">Finalizado</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3 d-flex align-items-end">
+                                        <button type="submit" class="btn btn-secondary me-2">
+                                            <i class="fas fa-search"></i> Filtrar
+                                        </button>
+                                        <button type="reset" class="btn btn-outline-secondary">
+                                            <i class="fas fa-undo"></i> Limpar
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tabela de Processos -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <i class="fas fa-table me-1"></i>
+                        Lista de Processos
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover" id="processos-table">
+                                <thead>
+                                    <tr>
+                                        <th>Número</th>
+                                        <th>Cliente</th>
+                                        <th>Tipo de Ação</th>
+                                        <th>Comarca</th>
+                                        <th>Status</th>
+                                        <th>Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Dados serão carregados via JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Novo Processo -->
+    <div class="modal fade" id="novoProcessoModal" tabindex="-1" aria-labelledby="novoProcessoModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="novoProcessoModalLabel">Novo Processo</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="novo-processo-form">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="processo-numero" class="form-label">Número do Processo</label>
+                                <input type="text" class="form-control" id="processo-numero" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="processo-cliente" class="form-label">Cliente</label>
+                                <select class="form-select" id="processo-cliente" required>
+                                    <option value="">Selecione um cliente</option>
+                                    <!-- Opções serão carregadas via JavaScript -->
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label for="processo-tipo" class="form-label">Tipo de Ação</label>
+                                <input type="text" class="form-control" id="processo-tipo">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="processo-comarca" class="form-label">Comarca</label>
+                                <input type="text" class="form-control" id="processo-comarca">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="processo-vara" class="form-label">Vara</label>
+                                <input type="text" class="form-control" id="processo-vara">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-12">
+                                <label for="processo-descricao" class="form-label">Descrição</label>
+                                <textarea class="form-control" id="processo-descricao" rows="3"></textarea>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="processo-status" class="form-label">Status</label>
+                                <select class="form-select" id="processo-status">
+                                    <option value="ativo">Ativo</option>
+                                    <option value="arquivado">Arquivado</option>
+                                    <option value="suspenso">Suspenso</option>
+                                    <option value="finalizado">Finalizado</option>
+                                </select>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="salvar-processo">Salvar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Editar Processo -->
+    <div class="modal fade" id="editarProcessoModal" tabindex="-1" aria-labelledby="editarProcessoModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editarProcessoModalLabel">Editar Processo</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editar-processo-form">
+                        <input type="hidden" id="editar-processo-id">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="editar-processo-numero" class="form-label">Número do Processo</label>
+                                <input type="text" class="form-control" id="editar-processo-numero" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="editar-processo-cliente" class="form-label">Cliente</label>
+                                <select class="form-select" id="editar-processo-cliente" required>
+                                    <option value="">Selecione um cliente</option>
+                                    <!-- Opções serão carregadas via JavaScript -->
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label for="editar-processo-tipo" class="form-label">Tipo de Ação</label>
+                                <input type="text" class="form-control" id="editar-processo-tipo">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="editar-processo-comarca" class="form-label">Comarca</label>
+                                <input type="text" class="form-control" id="editar-processo-comarca">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="editar-processo-vara" class="form-label">Vara</label>
+                                <input type="text" class="form-control" id="editar-processo-vara">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-12">
+                                <label for="editar-processo-descricao" class="form-label">Descrição</label>
+                                <textarea class="form-control" id="editar-processo-descricao" rows="3"></textarea>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="editar-processo-status" class="form-label">Status</label>
+                                <select class="form-select" id="editar-processo-status">
+                                    <option value="ativo">Ativo</option>
+                                    <option value="arquivado">Arquivado</option>
+                                    <option value="suspenso">Suspenso</option>
+                                    <option value="finalizado">Finalizado</option>
+                                </select>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="atualizar-processo">Salvar Alterações</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Custom JS -->
+    <script src="js/main.js"></script>
+    <script src="js/processos.js"></script>
+</body>
+</html>
